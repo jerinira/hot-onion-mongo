@@ -18,9 +18,6 @@ let client = new MongoClient(uri, { useNewUrlParser: true });
 app.get('/',(req,res)=>{
     res.send('thank you');
 })
-//app.listen(4000,()=>console.log("listening to port 4000"))
-
-//* * for hot onion project
 
 app.post('/addFood',(req,res)=>{
     const food= req.body;
@@ -39,6 +36,25 @@ app.post('/addFood',(req,res)=>{
         client.close();
       });     
 });
+
+app.post('/addCart',(req,res)=>{
+    const food= req.body;
+    client = new MongoClient(uri, { useNewUrlParser: true });
+    client.connect(err => {
+        const collection = client.db("onlineStore").collection("cart");
+        collection.insert(food,(err, result)=>{
+        console.log('Successfully Inserted', result);
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send(result.ops[0]);
+        }
+    });
+        client.close();
+      });     
+});
+
 
 
 app.get('/foods', (req,res)=>{
@@ -74,6 +90,24 @@ app.get('/food/:key',(req,res)=>{
         client.close();
       });
 })
+
+app.get('/cart', (req,res)=>{
+    client = new MongoClient(uri, { useNewUrlParser: true });
+    client.connect(err => {
+        const collection = client.db("onlineStore").collection("cart");
+        collection.find().toArray((err, documents)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send(documents[0]);
+        }
+    });
+        client.close();
+      });   
+});
+
+
 
  //end
 
