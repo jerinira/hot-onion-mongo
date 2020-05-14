@@ -145,7 +145,7 @@ app.get('/allAppointment', (req,res)=>{
     });
         client.close();
       });   
-});
+}); //End
 
 
 
