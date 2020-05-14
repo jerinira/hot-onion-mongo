@@ -111,6 +111,41 @@ app.get('/cart', (req,res)=>{
 
  //end
 
+//****/// FOR DOCTORS PORTAL
+
+app.post('/addAppointment',(req,res)=>{
+    const food= req.body;
+    client = new MongoClient(uri, { useNewUrlParser: true });
+    client.connect(err => {
+        const collection = client.db("doctors-portal").collection("appointment");
+        collection.insert(food,(err, result)=>{
+        console.log('Successfully Inserted', result);
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send(result.ops[0]);
+        }
+    });
+        client.close();
+      });     
+});
+
+app.get('/allAppointment', (req,res)=>{
+    client = new MongoClient(uri, { useNewUrlParser: true });
+    client.connect(err => {
+        const collection = client.db("doctors-portal").collection("appointment");
+        collection.find().toArray((err, documents)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send(documents);
+        }
+    });
+        client.close();
+      });   
+});
 
 
 
